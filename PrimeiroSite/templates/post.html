@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block body%}
+
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container row">
+   <ul class="timeline">
+          <li>
+             <!-- begin timeline-time -->
+             <div class="timeline-time">
+                <span class="date">{{post.data.strftime('%d/%m/%Y')}}</span>
+                <span class="time">{{post.data.strftime('%H:%M:%S')}}</span>
+             </div>
+             <!-- end timeline-time -->
+             <!-- begin timeline-icon -->
+             <div class="timeline-icon">
+                <a href="javascript:;">&nbsp;</a>
+             </div>
+             <!-- end timeline-icon -->
+             <!-- begin timeline-body -->
+             <div class="row border timeline-body">
+                <div class="timeline-header">
+                   <span class="userimage"><img src="{{url_for('static', filename='imgs_perfil/{}'.format(post.autor.foto_perfil))}}" alt=""></span>
+                   <span class="username">{{post.autor.nome}}<a href="javascript:;"></a> <small></small></span>
+                   <small class="text-muted" >
+                   {% if form %}
+                      <a href="#" data-bs-toggle="modal" data-bs-target="#EditarPost" style="text-align:right"> Editar Post </a>
+                      <a  href="#"data-bs-toggle="modal" data-bs-target="#ExcluirPost" style="text-align:right"> Excluir Post </a>
+                   {% endif %}
+                   </small>
+                </div>
+                <div class="timeline-content dont-break-out">
+                    <h5>{{post.titulo}}</h5><br>
+                    <p>{{post.corpo}}</p>
+                </div>
+                <div class="timeline-likes">
+                   <div class="stats-right">
+                      <span class="stats-text">0 Shares</span>
+                      <span class="stats-text">0 Comments</span>
+                   </div>
+                   <div class="stats">
+                      <span class="fa-stack fa-fw stats-icon">
+                      <i class="fa fa-circle fa-stack-2x text-danger"></i>
+                      <i class="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
+                      </span>
+                      <span class="fa-stack fa-fw stats-icon">
+                      <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                      <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+                      </span>
+                      <span class="stats-total">0k</span>
+                   </div>
+                </div>
+                <div class="timeline-footer">
+                   <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Gostar</a>
+                   <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comentar</a>
+                   <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-share fa-fw fa-lg m-r-3"></i> Compartilhar</a>
+                </div>
+                <div class="timeline-comment-box">
+                   <div class="user">
+                        <img src="{{url_for('static', filename='imgs_perfil/{}'.format(current_user.foto_perfil))}}"></div>
+                   <div class="input">
+                      <form action="">
+                         <div class="input-group">
+                            <input type="text" class="form-control rounded-corner" placeholder="Write a comment...">
+                            <span class="input-group-btn p-l-10">
+                            <button class="btn btn-primary f-s-12 rounded-corner" type="button">Comentar</button>
+                            </span>
+                         </div>
+                      </form>
+                   </div>
+                </div>
+             </div>
+
+          </li>
+   </ul>
+</div>
+
+{% if form %}
+<!-- Modal -->
+<div class="modal fade" id="EditarPost" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="titulo-modal-1">Editar Post</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="" class="border p-3">
+        {{form.csrf_token}}
+        <fieldset>
+            <div class="form-group">
+                {{form.titulo.label(class="form-label")}}
+                {{form.titulo(class="form-control")}}
+            </div>
+            <div class="form-group mt-2">
+                {{form.corpo.label(class="form-label")}}
+                {{form.corpo(class="form-control")}}
+            </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          {{form.botao_submit(class="btn btn-primary")}}
+      </div>
+       </fieldset>
+       </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="ExcluirPost" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="titulo-modal-2">Excluir Post</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Deseja realmente excluir o post?
+          (Essa ação não pode ser desfeita!)
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <form method="post" action="{{ url_for('excluir_post', post_id=post.id) }}">
+              <button type="submit" class="btn btn-danger">Excluir Post</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

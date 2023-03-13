@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block body%}
+
+<div style="text-align: center;color: black;" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+   <h1>Primeiro Site</h1>
+</div>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container row">
+   <ul class="timeline">
+       {% for post in posts %}
+          <li>
+             <!-- begin timeline-time -->
+             <div class="timeline-time">
+                <span class="date">{{post.data.strftime('%d/%m/%Y')}}</span>
+                <span class="time">{{post.data.strftime('%H:%M:%S')}}</span>
+             </div>
+             <!-- end timeline-time -->
+             <!-- begin timeline-icon -->
+             <div class="timeline-icon">
+                <a href="javascript:;">&nbsp;</a>
+             </div>
+             <!-- end timeline-icon -->
+             <!-- begin timeline-body -->
+             <div class="row border timeline-body">
+                <div class="timeline-header">
+                   <span class="userimage"><img src="{{url_for('static', filename='imgs_perfil/{}'.format(post.autor.foto_perfil))}}" alt=""></span>
+                   <span class="username">{{post.autor.nome}}<a href="javascript:;"></a> <small></small></span>
+                </div>
+                <div class="timeline-content dont-break-out">
+                    <h4> <a href="{{url_for('exibir_post',post_id=post.id)}}">{{post.titulo}}</a> </h4><br>
+                    <h6>{{post.corpo}}</h6>
+                </div>
+                <div class="timeline-likes">
+                   <div class="stats-right">
+                      <span class="stats-text">0 Shares</span>
+                      <span class="stats-text">0 Comments</span>
+                   </div>
+                   <div class="stats">
+                      <span class="fa-stack fa-fw stats-icon">
+                      <i class="fa fa-circle fa-stack-2x text-danger"></i>
+                      <i class="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
+                      </span>
+                      <span class="fa-stack fa-fw stats-icon">
+                      <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                      <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+                      </span>
+                      <span class="stats-total">0k</span>
+                   </div>
+                </div>
+                <div class="timeline-footer">
+                   <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Gostar</a>
+                   <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comentar</a>
+                   <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-share fa-fw fa-lg m-r-3"></i> Compartilhar</a>
+                </div>
+                <div>
+                   {% if post.comentarios %}
+                    <div class="container">
+                       <div class="comment-widgets">
+                           <div class="d-flex flex-row comment-row">
+                               <div class="p-2"><span class="round"><img src="{{url_for('static', filename='imgs_perfil/{}'.format(post.comentarios[0].autor_post.foto_perfil))}}" alt="user" width="35"></span></div>
+                               <div class="comment-text w-100 border ps-3 pt-3 pe-3 dont-break-out ">
+                                   <div><h6><strong>{{post.comentarios[0].autor_post.nome}}</strong> {{post.comentarios[0].data.strftime('%d/%m/%Y')}} {{post.comentarios[0].data.strftime('%H:%M:%S')}}</h6></div>
+                                   <p class="m-b-5 m-t-10 pt-1">{{post.comentarios[0].texto}}</p>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                   {% endif %}
+                      {% if post.comentarios[1] %}
+                    <div class="container">
+                       <div class="comment-widgets">
+                           <div class="d-flex flex-row comment-row">
+                               <div class="p-2"><span class="round"><img src="{{url_for('static', filename='imgs_perfil/{}'.format(post.comentarios[1].autor_post.foto_perfil))}}" alt="user" width="35"></span></div>
+                               <div class="comment-text w-100 border ps-3 pt-3 pe-3 dont-break-out ">
+                                   <div><h6><strong>{{post.comentarios[1].autor_post.nome}}</strong> {{post.comentarios[1].data.strftime('%d/%m/%Y')}} {{post.comentarios[1].data.strftime('%H:%M:%S')}}</h6></div>
+                                   <p class="m-b-5 m-t-10 pt-1">{{post.comentarios[1].texto}}</p>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                   {% endif %}
+                </div>
+                <div class="timeline-comment-box">
+                   <div class="user">
+                        <img src="{{url_for('static', filename='imgs_perfil/{}'.format(current_user.foto_perfil))}}"></div>
+                   <div class="input">
+                      <form method="POST" action="{{url_for('comentar', post_id=post.id)}}">
+                           {{form.csrf_token}}
+                         <fieldset>
+                           {{ form.comentario(class="form-control", placeholder="Escreva um comentário") }}
+                           {{ form.botao_submit(class="btn btn-primary mt-2") }}
+                         </fieldset>
+                     </form>
+                   </div>
+                </div>
+             </div>
+             <!-- end timeline-body -->
+          </li>
+       {% endfor %}
+   </ul>
+</div>
+{% endblock %}

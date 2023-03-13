@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 style="color: black"> USUARIOS DO SITE </h1>
+        <hr>
+        {% for usuario,email in lista_usuarios.items() %}
+        <div class="row mt-2">
+            <div class="col">
+                <h4>{{usuario}}</h4>
+            </div>
+            <div class="col">
+                <h4>{{email}}</h4>
+            </div>
+        </div>
+        <hr class="mb-2">
+        {% endfor %}
+    </div>
+{% endblock %}
